@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+
+
+
+
+model User {
+  userId     String      @id @default(cuid())
+  userName   String   @db.VarChar(65)
+  email      String   @unique @db.VarChar(255)
+  password   String   @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+}
+
+
+
+
+
+model Remedy {
+  id          String      @id @default(cuid()) 
+  name        String      
+  description String?     
+  instructions Instruction[] 
+  ingredients  RemedyIngredient[] 
+  diseases     RemedyDisease[]  
+  createdAt    DateTime    @default(now())  
+  updatedAt    DateTime    @updatedAt  
+  deleted      Boolean     @default(false)  
+
+  @@map("remedies")
+}
+
+model Instruction {
+  id          String   @id @default(cuid())  
+  stepNumber  Int      
+  text        String   
+  remedy      Remedy   @relation(fields: [remedyId], references: [id])
+  remedyId    String   
+  createdAt   DateTime @default(now())  
+  updatedAt   DateTime @updatedAt  
+  deleted     Boolean  @default(false)  
+
+  @@map("instructions")
+}
+
+model Ingredient {
+  id          String   @id @default(cuid())  
+  name        String   
+  remedies    RemedyIngredient[]  
+  createdAt   DateTime @default(now())  
+  updatedAt   DateTime @updatedAt  
+  deleted     Boolean  @default(false)  
+
+  @@map("ingredients")
+}
+
+model Disease {
+  id          String   @id @default(cuid())  
+  name        String   
+  remedies    RemedyDisease[]  
+  createdAt   DateTime @default(now())  
+  updatedAt   DateTime @updatedAt  
+  deleted     Boolean  @default(false)  
+
+  @@map("diseases")
+}
+
+model RemedyIngredient {
+  remedy     Remedy     @relation(fields: [remedyId], references: [id])
+  remedyId   String
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredientId String
+  quantity   String?   
+  createdAt  DateTime  @default(now())  
+  updatedAt  DateTime  @updatedAt  
+  deleted    Boolean   @default(false)  
+
+  @@id([remedyId, ingredientId])  
+  @@map("remedy_ingredients")
+}
+
+model RemedyDisease {
+  remedy    Remedy   @relation(fields: [remedyId], references: [id])
+  remedyId  String
+  disease   Disease  @relation(fields: [diseaseId], references: [id])
+  diseaseId String
+  createdAt DateTime @default(now())  
+  updatedAt DateTime @updatedAt  
+  deleted   Boolean  @default(false)  
+
+  @@id([remedyId, diseaseId])  
+  @@map("remedy_diseases")
+}
