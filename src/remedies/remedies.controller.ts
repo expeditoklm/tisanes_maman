@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, NotFoundException, BadRequestException, Put } from '@nestjs/common';
 import { RemedyService } from './remedies.service';
-import { CreateRemedyDto, UpdateRemedyDto } from './dto/remedy.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 
 import { UseGuards } from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
+import { CreateRemedyDto } from './dto/remedy.dto';
 @UseGuards(AuthGuard('jwt'))
 
 @ApiTags('Remèdes')  // Tag pour regrouper ces endpoints dans Swagger
@@ -19,11 +19,9 @@ export class RemedyController {
   @ApiResponse({ status: 201, description: 'Remède créé avec succès.' })
   @ApiResponse({ status: 400, description: 'Erreur lors de la création du remède.' })
   async create(@Body() createRemedyDto: CreateRemedyDto) {
-    try {
+
       return await this.remedyService.create(createRemedyDto);
-    } catch (error) {
-      throw new BadRequestException('Erreur lors de la création du remède.');
-    }
+  
   }
 
   @Get()
@@ -55,22 +53,16 @@ export class RemedyController {
     }
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Mettre à jour un remède par ID' })
   @ApiParam({ name: 'id', description: 'L\'ID du remède à mettre à jour' })
-  @ApiBody({ type: UpdateRemedyDto })  // Définit le schéma du corps pour la mise à jour
+  @ApiBody({ type: CreateRemedyDto })  // Définit le schéma du corps pour la mise à jour
   @ApiResponse({ status: 200, description: 'Remède mis à jour avec succès.' })
   @ApiResponse({ status: 404, description: 'Remède non trouvé.' })
   @ApiResponse({ status: 400, description: 'Erreur lors de la mise à jour du remède.' })
-  async update(@Param('id') id: string, @Body() updateRemedyDto: UpdateRemedyDto) {
-    try {
+  async update(@Param('id') id: string, @Body() updateRemedyDto: CreateRemedyDto) {
       return await this.remedyService.update(id, updateRemedyDto);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException('Remède non trouvé.');
-      }
-      throw new BadRequestException('Erreur lors de la mise à jour du remède.');
-    }
+   
   }
 
   @Delete(':id')
@@ -80,13 +72,8 @@ export class RemedyController {
   @ApiResponse({ status: 404, description: 'Remède non trouvé.' })
   @ApiResponse({ status: 400, description: 'Erreur lors de la suppression du remède.' })
   async delete(@Param('id') id: string) {
-    try {
+
       return await this.remedyService.delete(id);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException('Remède non trouvé.');
-      }
-      throw new BadRequestException('Erreur lors de la suppression du remède.');
-    }
+  
   }
 }

@@ -1,13 +1,18 @@
-import { IsString, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsBoolean, IsUUID } from 'class-validator';
 
 export class CreateDiseaseDto {
   @IsString()
   @IsNotEmpty({ message: 'Le nom de la maladie est requis.' })
   name: string;
 
+  @IsNotEmpty({ message: 'L\'ID de la categorie est requis.' })
+    @IsUUID('4', { message: 'L\'ID  de la categorie  doit être un UUID valide.' })
+    categoryId: string;
+
   @IsOptional()
-  @IsBoolean({ message: 'La valeur du statut supprimé doit être un booléen.' })
-  deleted?: boolean;
+  @IsString()
+  description: string;
+
 }
 
 export class UpdateDiseaseDto {
@@ -15,7 +20,14 @@ export class UpdateDiseaseDto {
   @IsOptional()
   name?: string;
 
+  
+  @IsNotEmpty({ message: 'L\'ID de la categorie est requis.' })
+    @IsUUID('4', { message: 'L\'ID  de la categorie  doit être un UUID valide.' })
+    categoryId: string;
+
   @IsOptional()
-  @IsBoolean({ message: 'La valeur du statut supprimé doit être un booléen.' })
-  deleted?: boolean;
+  @IsString()
+  description?: string;
+
+  
 }

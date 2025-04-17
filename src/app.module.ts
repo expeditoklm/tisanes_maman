@@ -11,8 +11,9 @@ import { RemedyDiseaseModule } from './remedy-disease/remedy-disease.module';
 import { InstructionService } from './instructions/instructions.service';
 import { InstructionsModule } from './instructions/instructions.module';
 import { AuthModule } from './auth/auth.module';
+import { CategoriesModule } from './categories/categories.module';
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }),RemediesModule, IngredientsModule, DiseasesModule, PrismaModule, RemedyIngredientModule, RemedyDiseaseModule, InstructionsModule, AuthModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }),RemediesModule, IngredientsModule, DiseasesModule, PrismaModule, RemedyIngredientModule, RemedyDiseaseModule, InstructionsModule, AuthModule, CategoriesModule],
   controllers: [AppController],
   providers: [AppService, InstructionService],
 })

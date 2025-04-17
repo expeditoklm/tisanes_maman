@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, BadRequestException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, BadRequestException, UseGuards, Put } from '@nestjs/common';
 import { DiseaseService } from './diseases.service';
 import { CreateDiseaseDto, UpdateDiseaseDto } from './dto/diseases.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 @UseGuards(AuthGuard('jwt'))
 @ApiTags('Maladies')  // Tag pour regrouper ces endpoints dans Swagger
-@Controller('maladies')
+@Controller('diseases')
 export class DiseaseController {
   constructor(private readonly diseaseService: DiseaseService) {}
 
@@ -52,7 +52,7 @@ export class DiseaseController {
     }
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Mettre à jour une maladie par ID' })
   @ApiParam({ name: 'id', description: 'L\'ID de la maladie à mettre à jour' })
   @ApiBody({ type: UpdateDiseaseDto })  // Définit le schéma du corps pour la mise à jour

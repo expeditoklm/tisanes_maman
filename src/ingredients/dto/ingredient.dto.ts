@@ -3,7 +3,15 @@ import { IsString, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator';
 export class CreateIngredientDto {
   @IsString()
   @IsNotEmpty({ message: 'Le nom de l\'ingrédient est obligatoire.' })
-  name: string;
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsString() 
+  imgUrls?: string [];
 }
 
 export class UpdateIngredientDto {
@@ -12,7 +20,14 @@ export class UpdateIngredientDto {
   @IsNotEmpty({ message: 'Le nom de l\'ingrédient ne peut pas être vide.' })
   name?: string;
 
-  @IsBoolean()
   @IsOptional()
-  deleted?: boolean;
+  @IsString()
+  description?: string;
+
+  
+  @IsOptional()
+  @IsString()
+  imgUrls: string [];
+
+  photoIdsToDelete?: string[]; // Ajout de cette ligne pour les IDs de photos à supprimer
 }

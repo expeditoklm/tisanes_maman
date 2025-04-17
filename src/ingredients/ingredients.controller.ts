@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, NotFoundException, BadRequestException, Put } from '@nestjs/common';
 import { IngredientService } from './ingredients.service';
 import { CreateIngredientDto, UpdateIngredientDto } from './dto/ingredient.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';

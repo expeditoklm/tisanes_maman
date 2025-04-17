@@ -13,36 +13,53 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-
-
-
-
 model User {
-  userId     String      @id @default(cuid())
+  userId     String   @id @default(cuid())
   userName   String   @db.VarChar(65)
   email      String   @unique @db.VarChar(255)
   password   String   @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
 
+  @@map("users")
 }
 
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  diseases    Disease[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deleted     Boolean   @default(false)
 
-
-
+  @@map("categories")
+}
 
 model Remedy {
-  id          String      @id @default(cuid()) 
-  name        String      
-  description String?     
+  id           String             @id @default(cuid()) 
+  name         String      
+  description  String?     
   instructions Instruction[] 
   ingredients  RemedyIngredient[] 
   diseases     RemedyDisease[]  
-  createdAt    DateTime    @default(now())  
-  updatedAt    DateTime    @updatedAt  
-  deleted      Boolean     @default(false)  
+  value        Int
+  createdAt    DateTime           @default(now())  
+  updatedAt    DateTime           @updatedAt  
+  deleted      Boolean            @default(false)  
 
   @@map("remedies")
+}
+
+model Photo {
+  id          String    @id @default(cuid())
+  url         String
+  ingredient      Ingredient    @relation(fields: [ingredientId], references: [id])
+  ingredientId    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deleted     Boolean   @default(false)
+
+  @@map("photos")
 }
 
 model Instruction {
@@ -59,49 +76,54 @@ model Instruction {
 }
 
 model Ingredient {
-  id          String   @id @default(cuid())  
-  name        String   
-  remedies    RemedyIngredient[]  
-  createdAt   DateTime @default(now())  
-  updatedAt   DateTime @updatedAt  
-  deleted     Boolean  @default(false)  
+  id          String             @id @default(cuid())  
+  name        String
+  description  String?    
+  remedies    RemedyIngredient[]
+  photos       Photo[]  
+  createdAt   DateTime           @default(now())  
+  updatedAt   DateTime           @updatedAt  
+  deleted     Boolean            @default(false)  
 
   @@map("ingredients")
 }
 
 model Disease {
-  id          String   @id @default(cuid())  
-  name        String   
-  remedies    RemedyDisease[]  
-  createdAt   DateTime @default(now())  
-  updatedAt   DateTime @updatedAt  
-  deleted     Boolean  @default(false)  
+  id          String          @id @default(cuid())  
+  name        String
+  description  String?    
+  remedies    RemedyDisease[]
+  category     Category?          @relation(fields: [categoryId], references: [id])
+  categoryId   String?  
+  createdAt   DateTime        @default(now())  
+  updatedAt   DateTime        @updatedAt  
+  deleted     Boolean         @default(false)  
 
   @@map("diseases")
 }
 
 model RemedyIngredient {
-  remedy     Remedy     @relation(fields: [remedyId], references: [id])
-  remedyId   String
-  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+  remedy       Remedy     @relation(fields: [remedyId], references: [id])
+  remedyId     String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
   ingredientId String
-  quantity   String?   
-  createdAt  DateTime  @default(now())  
-  updatedAt  DateTime  @updatedAt  
-  deleted    Boolean   @default(false)  
+  quantity     String?   
+  createdAt    DateTime   @default(now())  
+  updatedAt    DateTime   @updatedAt  
+  deleted      Boolean    @default(false)  
 
   @@id([remedyId, ingredientId])  
   @@map("remedy_ingredients")
 }
 
 model RemedyDisease {
-  remedy    Remedy   @relation(fields: [remedyId], references: [id])
-  remedyId  String
-  disease   Disease  @relation(fields: [diseaseId], references: [id])
-  diseaseId String
-  createdAt DateTime @default(now())  
-  updatedAt DateTime @updatedAt  
-  deleted   Boolean  @default(false)  
+  remedy     Remedy   @relation(fields: [remedyId], references: [id])
+  remedyId   String
+  disease    Disease  @relation(fields: [diseaseId], references: [id])
+  diseaseId  String
+  createdAt  DateTime @default(now())  
+  updatedAt  DateTime @updatedAt  
+  deleted    Boolean  @default(false)  
 
   @@id([remedyId, diseaseId])  
   @@map("remedy_diseases")
