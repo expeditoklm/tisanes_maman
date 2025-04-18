@@ -1,16 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -25,106 +19,111 @@ model User {
 }
 
 model Category {
-  id          String    @id @default(cuid())
-  name        String
-  diseases    Disease[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deleted     Boolean   @default(false)
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   Boolean   @default(false)
+  diseases  Disease[]
 
   @@map("categories")
 }
 
 model Remedy {
-  id           String             @id @default(cuid()) 
-  name         String      
-  description  String?     
-  instructions Instruction[] 
-  ingredients  RemedyIngredient[] 
-  diseases     RemedyDisease[]  
+  id           String             @id @default(cuid())
+  name         String
+  description  String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  deleted      Boolean            @default(false)
   value        Int
-  createdAt    DateTime           @default(now())  
-  updatedAt    DateTime           @updatedAt  
-  deleted      Boolean            @default(false)  
+  instructions Instruction[]
+  diseases     RemedyDisease[]
+  ingredients  RemedyIngredient[]
 
   @@map("remedies")
 }
 
 model Photo {
-  id          String    @id @default(cuid())
-  url         String
-  ingredient      Ingredient    @relation(fields: [ingredientId], references: [id])
-  ingredientId    String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  deleted     Boolean   @default(false)
+  id           String     @id @default(cuid())
+  url          String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deleted      Boolean    @default(false)
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
 
+  @@index([ingredientId], map: "photos_ingredientId_fkey")
   @@map("photos")
 }
 
 model Instruction {
-  id          String   @id @default(cuid())  
-  stepNumber  Int      
-  text        String   
-  remedy      Remedy   @relation(fields: [remedyId], references: [id])
-  remedyId    String   
-  createdAt   DateTime @default(now())  
-  updatedAt   DateTime @updatedAt  
-  deleted     Boolean  @default(false)  
+  id         String   @id @default(cuid())
+  stepNumber Int
+  text       String
+  remedyId   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deleted    Boolean  @default(false)
+  remedy     Remedy   @relation(fields: [remedyId], references: [id])
 
+  @@index([remedyId], map: "instructions_remedyId_fkey")
   @@map("instructions")
 }
 
 model Ingredient {
-  id          String             @id @default(cuid())  
+  id          String             @id @default(cuid())
   name        String
-  description  String?    
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  deleted     Boolean            @default(false)
+  description String?
+  photos      Photo[]
   remedies    RemedyIngredient[]
-  photos       Photo[]  
-  createdAt   DateTime           @default(now())  
-  updatedAt   DateTime           @updatedAt  
-  deleted     Boolean            @default(false)  
 
   @@map("ingredients")
 }
 
 model Disease {
-  id          String          @id @default(cuid())  
+  id          String          @id @default(cuid())
   name        String
-  description  String?    
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  deleted     Boolean         @default(false)
+  description String?
+  categoryId  String?
+  category    Category?       @relation(fields: [categoryId], references: [id])
   remedies    RemedyDisease[]
-  category     Category?          @relation(fields: [categoryId], references: [id])
-  categoryId   String?  
-  createdAt   DateTime        @default(now())  
-  updatedAt   DateTime        @updatedAt  
-  deleted     Boolean         @default(false)  
 
+  @@index([categoryId], map: "diseases_categoryId_fkey")
   @@map("diseases")
 }
 
 model RemedyIngredient {
-  remedy       Remedy     @relation(fields: [remedyId], references: [id])
   remedyId     String
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
   ingredientId String
-  quantity     String?   
-  createdAt    DateTime   @default(now())  
-  updatedAt    DateTime   @updatedAt  
-  deleted      Boolean    @default(false)  
+  quantity     String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  deleted      Boolean    @default(false)
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  remedy       Remedy     @relation(fields: [remedyId], references: [id])
 
-  @@id([remedyId, ingredientId])  
+  @@id([remedyId, ingredientId])
+  @@index([ingredientId], map: "remedy_ingredients_ingredientId_fkey")
   @@map("remedy_ingredients")
 }
 
 model RemedyDisease {
-  remedy     Remedy   @relation(fields: [remedyId], references: [id])
-  remedyId   String
-  disease    Disease  @relation(fields: [diseaseId], references: [id])
-  diseaseId  String
-  createdAt  DateTime @default(now())  
-  updatedAt  DateTime @updatedAt  
-  deleted    Boolean  @default(false)  
+  remedyId  String
+  diseaseId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted   Boolean  @default(false)
+  disease   Disease  @relation(fields: [diseaseId], references: [id])
+  remedy    Remedy   @relation(fields: [remedyId], references: [id])
 
-  @@id([remedyId, diseaseId])  
+  @@id([remedyId, diseaseId])
+  @@index([diseaseId], map: "remedy_diseases_diseaseId_fkey")
   @@map("remedy_diseases")
 }
