@@ -1,0 +1,1 @@
+{"version":3,"file":"diseases.module.js","sourceRoot":"","sources":["../../../src/diseases/diseases.module.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAAwC;AACxC,yDAAoD;AACpD,+DAA0D;AAMnD,IAAM,cAAc,GAApB,MAAM,cAAc;CAAG,CAAA;AAAjB,wCAAc;yBAAd,cAAc;IAJ1B,IAAA,eAAM,EAAC;QACN,SAAS,EAAE,CAAC,iCAAc,CAAC;QAC3B,WAAW,EAAE,CAAC,uCAAiB,CAAC;KACjC,CAAC;GACW,cAAc,CAAG"}
