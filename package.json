@@ -6,9 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": " node node_modules/.bin/nest build npx prisma generate && npx nest build",
+    "build": "npx prisma generate && npx nest build",
     "build:prod": "npx prisma generate && npx nest build",
-    "postinstall": "npm install -g @nestjs/cli",
+    "postinstall": "npx prisma generate",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -41,10 +41,10 @@
     "rxjs": "^7.8.1",
     "save": "^2.9.0",
     "save-dev": "^0.0.1-security",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "@nestjs/cli": "^10.4.9"
   },
   "devDependencies": {
-    "@nestjs/cli": "^10.4.9",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/swagger": "^7.4.2",
     "@nestjs/testing": "^10.0.0",
