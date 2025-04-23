@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": " node node_modules/.bin/nest build             npx prisma generate && npx nest build",
+    "build": " node node_modules/.bin/nest build npx prisma generate && npx nest build",
     "build:prod": "npx prisma generate && npx nest build",
     "postinstall": "npm install -g @nestjs/cli",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
