@@ -34,7 +34,8 @@ app.useStaticAssets(uploadsPath, {
 
   // Enable CORS
   app.enableCors({
-    origin: 'http://localhost:4200', // Your frontend origin
+    origin: ['http://localhost:4200',
+    'https://front-ng-tisane.vercel.app',],  // Your frontend origin
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
   });
